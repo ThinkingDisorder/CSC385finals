@@ -92,7 +92,7 @@
             }
             balance += amount;
             updateBalance();
-            logTransaction(`Deposited: $${amount.toFixed(2)}`);
+            logTransaction(`Deposited: $${amount.toFixed(2)} +`);
         }
 
         function handleWithdrawal() {
@@ -107,7 +107,7 @@
             }
             balance -= amount;
             updateBalance();
-            logTransaction(`Withdrew: $${amount.toFixed(2)}`);
+            logTransaction(`Withdrew: $${amount.toFixed(2)} -`);
         }
 
         // Function to update the balance display and localStorage
