@@ -6,4 +6,136 @@
     <title>Final Part 2</title>
     <meta name="author" content="Neldan Edward">
     <meta name="description" content="The CSC 350 finals">
-    <meta name="keywords" content="BMCC Bank Spring202">
+    <meta name="keywords" content="BMCC Bank Spring2024">
+</head>
+<body>
+    <script>
+        const studentInfo = `
+        Name: Neldan Edward
+        Student ID: 24161377
+        Description: BMCC Bank Application
+        `;
+
+        console.log(studentInfo);
+
+        // the h3 element
+        const h3 = document.createElement('h3');
+        h3.textContent = 'BMCC Bank Spring 2024';
+        document.body.appendChild(h3);
+
+        // the table
+        const table = document.createElement('table');
+
+        // create a cell with content
+        function createCell(content) {
+            const cell = document.createElement('td');
+            cell.appendChild(content);
+            return cell;
+        }
+
+        // create and set attributes for input elements
+        function createInput(attributes) {
+            const input = document.createElement('input');
+            for (const attr in attributes) {
+                input.setAttribute(attr, attributes[attr]);
+            }
+            return input;
+        }
+
+        // Initialize balance from localStorage if available
+        let balance = localStorage.getItem('balance') ? parseFloat(localStorage.getItem('balance')) : 0;
+
+        // Row 1: Balance display
+        const row1 = document.createElement('tr');
+        row1.appendChild(createCell(document.createTextNode('Balance')));
+        const balanceInput = createInput({ type: 'text', id: 'balance', name: 'balance', value: balance, readOnly: true });
+        row1.appendChild(createCell(balanceInput));
+        row1.appendChild(createCell(document.createTextNode('')));
+        table.appendChild(row1);
+
+        // Row 2: Deposit
+        const row2 = document.createElement('tr');
+        row2.appendChild(createCell(document.createTextNode('')));
+        const depositInput = createInput({ type: 'text', id: 'depositAmount', name: 'depositAmount' });
+        row2.appendChild(createCell(depositInput));
+        const depositButton = createInput({ type: 'button', id: 'depositButton', name: 'depositButton', value: 'Deposit', style: 'width: 120px' });
+        row2.appendChild(createCell(depositButton));
+        table.appendChild(row2);
+
+        // Row 3: Withdrawal
+        const row3 = document.createElement('tr');
+        row3.appendChild(createCell(document.createTextNode('')));
+        const withdrawalInput = createInput({ type: 'text', id: 'withdrawalAmount', name: 'withdrawalAmount' });
+        row3.appendChild(createCell(withdrawalInput));
+        const withdrawalButton = createInput({ type: 'button', id: 'withdrawalButton', name: 'withdrawalButton', value: 'Withdrawal', style: 'width: 120px' });
+        row3.appendChild(createCell(withdrawalButton));
+        table.appendChild(row3);
+
+        // the table
+        document.body.appendChild(table);
+
+        // Create and append the pre element for transactions
+        const pre = document.createElement('pre');
+        pre.id = 'today_transactions';
+        document.body.appendChild(pre);
+
+        // Event listeners
+        depositButton.addEventListener('click', handleDeposit);
+        withdrawalButton.addEventListener('click', handleWithdrawal);
+
+        // Functions to handle deposit and withdrawal
+        function handleDeposit() {
+            const amount = parseFloat(depositInput.value);
+            if (isNaN(amount) || amount <= 0) {
+                alert('Please enter a valid deposit amount.');
+                return;
+            }
+            balance += amount;
+            updateBalance();
+            logTransaction(`Deposited: $${amount.toFixed(2)}`);
+        }
+
+        function handleWithdrawal() {
+            const amount = parseFloat(withdrawalInput.value);
+            if (isNaN(amount) || amount <= 0) {
+                alert('Please enter a valid withdrawal amount.');
+                return;
+            }
+            if (amount > balance) {
+                alert('Insufficient balance.');
+                return;
+            }
+            balance -= amount;
+            updateBalance();
+            logTransaction(`Withdrew: $${amount.toFixed(2)}`);
+        }
+
+        // Function to update the balance display and localStorage
+        function updateBalance() {
+            balanceInput.value = balance.toFixed(2);
+            localStorage.setItem('balance', balance);
+        }
+
+        // Function to log transactions
+        function logTransaction(message) {
+            const timestamp = new Date().toLocaleString();
+            const transactionMessage = `${timestamp} - ${message}\n`;
+            pre.textContent += transactionMessage;
+            console.log(transactionMessage);
+
+            // Save transactions in localStorage
+            let transactions = localStorage.getItem('transactions') ? JSON.parse(localStorage.getItem('transactions')) : [];
+            transactions.push(transactionMessage);
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+        }
+
+        // Load transactions from localStorage on page load
+        window.onload = function () {
+            const savedTransactions = localStorage.getItem('transactions');
+            if (savedTransactions) {
+                pre.textContent = JSON.parse(savedTransactions).join('');
+            }
+        };
+    </script>
+</body>
+</html>
